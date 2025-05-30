@@ -1,0 +1,110 @@
+<!-- views/downloader.ejs -->
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Unduh video, musik, dan dokumen dari berbagai platform dengan mudah.">
+  <meta name="keywords" content="downloader, JzTools, video downloader, music downloader, document downloader, TikTok, YouTube, Spotify">
+  <meta name="author" content="JzProject">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="JzTools - Downloader">
+  <meta property="og:description" content="Unduh video, musik, dan dokumen dari TikTok, YouTube, atau Spotify dengan antarmuka modern dan cepat.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tools.jzuvdev.my.id/downloader">
+  <meta property="og:image" content="https://tools.jzuvdev.my.id/og-image.jpg">
+  <title>JzTools - Downloader</title>
+  <!-- TailwindCSS -->
+  <script src="/js/tailwindcss.js"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Anime.js -->
+  <script src="/js/anime.min.js"></script>
+  <!-- Three.js -->
+  <script src="/js/three.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+  <script>
+    document.documentElement.classList.add('dark');
+  </script>
+</head>
+<body class="bg-black text-white relative transition-colors duration-300 dark:bg-black" id="theme-body">
+  <!-- Canvas untuk 3D Cubes -->
+  <canvas id="cell-canvas" class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true"></canvas>
+
+  <!-- Header -->
+  <%- include('partials/header') %>
+
+  <!-- Downloader Section -->
+  <section class="pt-24 pb-16 flex items-center justify-center text-center px-4">
+    <div class="container mx-auto">
+      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate__title">Downloader <span class="text-cyan-400">Tool</span></h2>
+      <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 animate__description">
+        Masukkan URL untuk mengunduh video, musik, atau dokumen dari TikTok, YouTube, atau Spotify dengan cepat.
+      </p>
+      <div class="max-w-lg mx-auto bg-cyan-900/10 backdrop-blur-md p-6 rounded-2xl shadow-lg border-2 border-cyan-500">
+        <form id="download-form" action="/download" method="POST" class="flex flex-col gap-6">
+          <!-- Platform Selection -->
+          <div class="bg-cyan-900/20 backdrop-blur-md p-4 rounded-xl border border-cyan-400">
+            <p class="text-cyan-300 font-semibold mb-4">Pilih Salah Satu</p>
+            <div class="flex justify-center gap-6">
+              <div class="custom-radio">
+                <input type="radio" id="tiktok" name="platform" value="tiktok" class="hidden" required>
+                <label for="tiktok" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-gray-600 text-gray-600 hover:bg-gray-500/20 hover:text-gray-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-gray-900 data-[checked=true]:border-gray-200 data-[checked=true]:text-gray-200">
+                  <i class="fab fa-tiktok text-2xl"></i>
+                </label>
+              </div>
+              <div class="custom-radio">
+                <input type="radio" id="youtube" name="platform" value="youtube" class="hidden">
+                <label for="youtube" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-red-600 text-red-600 hover:bg-red-500/20 hover:text-red-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-red-900/30 data-[checked=true]:border-red-200 data-[checked=true]:text-red-200">
+                  <i class="fab fa-youtube text-2xl"></i>
+                </label>
+              </div>
+              <div class="custom-radio">
+                <input type="radio" id="spotify" name="platform" value="spotify" class="hidden">
+                <label for="spotify" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-green-600 text-green-600 hover:bg-green-500/20 hover:text-green-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-green-900/30 data-[checked=true]:border-green-200 data-[checked=true]:text-green-200">
+                  <i class="fab fa-spotify text-2xl"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- URL Input -->
+          <input type="url" name="url" placeholder="Masukkan URL (misalnya: YouTube, TikTok, Spotify)" class="bg-transparent border border-cyan-400 rounded px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400" required>
+          <button type="submit" id="download-button" class="px-6 py-3 border border-cyan-500 text-cyan-400 rounded-full hover:bg-cyan-500/20 hover:text-cyan-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            Unduh Sekarang
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <%- include('partials/footer') %>
+
+  <!-- JavaScript -->
+  <script src="/js/scripts.js"></script>
+  <script>
+    // Enable/disable download button and toggle checked state
+    const downloadForm = document.getElementById('download-form');
+    const downloadButton = document.getElementById('download-button');
+    const platformInputs = document.querySelectorAll('input[name="platform"]');
+
+    platformInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        // Enable button if a platform is selected
+        downloadButton.disabled = !downloadForm.querySelector('input[name="platform"]:checked');
+        // Toggle data-checked attribute for styling
+        platformInputs.forEach(i => {
+          const label = i.nextElementSibling;
+          label.dataset.checked = i.checked ? 'true' : 'false';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

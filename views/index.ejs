@@ -1,0 +1,70 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tool downloader, searcher, and cloud storage in one place. Multi-language & SEO friendly.">
+  <meta name="keywords" content="tools, downloader, searcher, cloud, storage, JzProject, web app, modern UI, glassmorphism, SEO, adsense ready">
+  <meta name="author" content="JzProject">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="JzTools - Powerful Web Tools in One Place">
+  <meta property="og:description" content="Access downloader, searcher, and cloud storage with a modern, elegant, and animated interface.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tools.jzuvdev.my.id">
+  <meta property="og:image" content="https://tools.jzuvdev.my.id/og-image.jpg">
+  <title>JzTools - Powerful Web Tools in One Place</title>
+  <!-- TailwindCSS -->
+  <script src="/js/tailwindcss.js"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Anime.js -->
+  <script src="/js/anime.min.js"></script>
+  <!-- Three.js -->
+  <script src="/js/three.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+  <script>
+    document.documentElement.classList.add('dark');
+  </script>
+</head>
+<body class="bg-black text-white relative transition-colors duration-300 dark:bg-black" id="theme-body">
+  <!-- Canvas untuk 3D Cubes -->
+  <canvas id="cell-canvas" class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true"></canvas>
+
+  <!-- Header -->
+  <%- include('partials/header') %>
+
+  <!-- Hero Section -->
+  <section class="pt-24 pb-16 flex items-center justify-center text-center px-4" id="home">
+    <div class="container mx-auto">
+      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate__title">All-in-One <span class="text-cyan-400">Web Tools</span></h2>
+      <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 animate__description">
+        Downloader, Searcher, Cloud Storage, dan lebih banyak lagi dengan antarmuka modern dan elegan.
+      </p>
+      <a href="#tools" class="inline-block px-6 py-3 border border-cyan-500 text-cyan-400 rounded-full hover:bg-cyan-500/20 hover:text-cyan-200 transition-colors">
+        Jelajahi Tools
+      </a>
+    </div>
+  </section>
+
+  <!-- Tools Section -->
+  <%- include('components/tools') %>
+  
+
+  <!-- Features Section -->
+  <%- include('components/feature') %>
+  
+
+  <!-- Footer -->
+  <%- include('partials/footer') %>
+
+  <!-- JavaScript -->
+  <script src="/js/scripts.js"></script>
+</body>
+</html>

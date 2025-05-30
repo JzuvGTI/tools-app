@@ -1,0 +1,162 @@
+<!-- views/cloud.ejs -->
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Unggah file hingga 200MB dengan aman dan akses kapan saja menggunakan JzTools Cloud Storage.">
+  <meta name="keywords" content="cloud storage, JzTools, secure storage, file upload, file sharing">
+  <meta name="author" content="JzProject">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="JzTools - Cloud Storage">
+  <meta property="og:description" content="Unggah dan simpan file dengan aman menggunakan antarmuka modern dan cepat.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tools.jzuvdev.my.id/cloud">
+  <meta property="og:image" content="https://tools.jzuvdev.my.id/og-image.jpg">
+  <title>JzTools - Cloud Storage</title>
+  <!-- TailwindCSS -->
+  <script src="/js/tailwindcss.js"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Anime.js -->
+  <script src="/js/anime.min.js"></script>
+  <!-- Three.js -->
+  <script src="/js/three.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+  <script>
+    document.documentElement.classList.add('dark');
+  </script>
+</head>
+<body class="bg-black text-white relative transition-colors duration-300 dark:bg-black" id="theme-body">
+  <!-- Canvas untuk 3D Cubes -->
+  <canvas id="cell-canvas" class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true"></canvas>
+
+  <!-- Header -->
+  <%- include('partials/header') %>
+
+  <!-- Cloud Storage Section -->
+  <section class="pt-24 pb-16 flex items-center justify-center text-center px-4">
+    <div class="container mx-auto">
+      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate__title">Cloud Storage <span class="text-purple-400">Tool</span></h2>
+      <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 animate__description">
+        Unggah file hingga 200MB dengan aman dan dapatkan link untuk mengaksesnya kapan saja.
+      </p>
+      <div class="max-w-lg mx-auto bg-cyan-900/10 backdrop-blur-md p-6 rounded-2xl shadow-lg border-2 border-purple-500">
+        <!-- Upload Form -->
+        <form id="upload-form" action="/upload" method="POST" enctype="multipart/form-data" class="flex flex-col gap-6">
+          <div class="bg-cyan-900/20 backdrop-blur-md p-4 rounded-xl border border-purple-400">
+            <p class="text-purple-300 font-semibold mb-4">Pilih File (Maks. 200MB)</p>
+            <input type="file" id="file-input" name="file" accept=".mp4,.mp3,.pdf,.jpg,.png" class="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border file:border-purple-400 file:bg-transparent file:text-purple-400 file:hover:bg-purple-500/20 file:transition-colors cursor-pointer" required>
+          </div>
+          <!-- Loader (Hidden by default) -->
+          <div id="loader" class="hidden flex flex-col gap-4">
+            <div class="w-full bg-gray-700 rounded-full h-2.5">
+              <div id="progress-bar" class="bg-purple-500 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+            <p id="loader-text" class="text-gray-300">Mengunggah <span id="file-name"></span> (<span id="file-size"></span>)</p>
+          </div>
+          <button type="submit" id="upload-button" class="px-6 py-3 border border-purple-500 text-purple-400 rounded-full hover:bg-purple-500/20 hover:text-purple-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            Unggah Sekarang
+          </button>
+        </form>
+        <!-- Result Card (Hidden by default) -->
+        <div id="result-card" class="hidden mt-6 bg-cyan-900/20 backdrop-blur-md p-4 rounded-xl border border-purple-400 flex flex-col gap-4">
+          <p class="text-purple-300 font-semibold">File Berhasil Diunggah!</p>
+          <p class="text-gray-300">Nama: <span id="result-file-name"></span></p>
+          <p class="text-gray-300">Ukuran: <span id="result-file-size"></span></p>
+          <div class="flex items-center gap-2">
+            <input id="result-link" type="text" readonly class="bg-transparent border border-purple-400 rounded px-4 py-2 text-white w-full" value="">
+            <button id="copy-button" class="px-4 py-2 border border-purple-500 text-purple-400 rounded-full hover:bg-purple-500/20 hover:text-purple-200 transition-colors">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <%- include('partials/footer') %>
+
+  <!-- JavaScript -->
+  <script src="/js/scripts.js"></script>
+  <script>
+    const uploadForm = document.getElementById('upload-form');
+    const fileInput = document.getElementById('file-input');
+    const uploadButton = document.getElementById('upload-button');
+    const loader = document.getElementById('loader');
+    const progressBar = document.getElementById('progress-bar');
+    const loaderText = document.getElementById('loader-text');
+    const fileNameSpan = document.getElementById('file-name');
+    const fileSizeSpan = document.getElementById('file-size');
+    const resultCard = document.getElementById('result-card');
+    const resultFileName = document.getElementById('result-file-name');
+    const resultFileSize = document.getElementById('result-file-size');
+    const resultLink = document.getElementById('result-link');
+    const copyButton = document.getElementById('copy-button');
+
+    // Validate file size (max 200MB)
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (file) {
+        const maxSize = 200 * 1024 * 1024; // 200MB in bytes
+        if (file.size > maxSize) {
+          alert('File terlalu besar! Maksimum 200MB.');
+          fileInput.value = '';
+          uploadButton.disabled = true;
+        } else {
+          uploadButton.disabled = false;
+        }
+      }
+    });
+
+    // Handle form submission
+    uploadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      // Show loader
+      loader.classList.remove('hidden');
+      uploadButton.disabled = true;
+      fileNameSpan.textContent = file.name;
+      fileSizeSpan.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+      // Simulate upload progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 10;
+        progressBar.style.width = `${progress}%`;
+        if (progress >= 100) {
+          clearInterval(interval);
+          // Hide loader and show result
+          loader.classList.add('hidden');
+          resultCard.classList.remove('hidden');
+          resultFileName.textContent = file.name;
+          resultFileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+          resultLink.value = `https://tools.jzuvdev.my.id/files/${file.name}`; // Placeholder link
+          uploadButton.disabled = false;
+          fileInput.value = ''; // Reset input
+        }
+      }, 500); // Simulate 5 seconds upload
+    });
+
+    // Copy link to clipboard
+    copyButton.addEventListener('click', () => {
+      resultLink.select();
+      navigator.clipboard.writeText(resultLink.value).then(() => {
+        copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => {
+          copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy';
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
