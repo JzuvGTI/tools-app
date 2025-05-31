@@ -1,114 +1,163 @@
-<!-- views/searcher.ejs -->
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Cari apa saja dengan cepat dan akurat menggunakan sistem cerdas kami.">
-  <meta name="keywords" content="searcher, JzTools, intelligent search, fast search, TikTok, YouTube, Spotify">
+  <meta name="keywords" content="searcher, JzTools, intelligent search, fast search, TikTok, LK21, Pinterest, Google Image">
   <meta name="author" content="JzProject">
   <meta name="robots" content="index, follow">
   <meta property="og:title" content="JzTools - Searcher">
-  <meta property="og:description" content="Cari informasi di TikTok, YouTube, atau Spotify dengan antarmuka modern dan sistem cerdas.">
+  <meta property="og:description" content="Cari informasi di TikTok, LK21, Pinterest, atau Google Image dengan antarmuka modern dan sistem cerdas.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://tools.jzuvdev.my.id/searcher">
   <meta property="og:image" content="https://tools.jzuvdev.my.id/og-image.jpg">
   <title>JzTools - Searcher</title>
-  <!-- TailwindCSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- Google Fonts: Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Anime.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <!-- Three.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-
-  <script src="https://tools.jzuvdev.my.id/sw.js"></script>
-  <script src="https://fpyf8.com/88/tag.min.js" data-zone="149939" async data-cfasync="false"></script>
-  <script src="/tag.min.js" data-zone="149939" async data-cfasync="false"></script>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
   <script>
     document.documentElement.classList.add('dark');
   </script>
 </head>
-<body class="bg-black text-white relative transition-colors duration-300 dark:bg-black" id="theme-body">
-  <!-- Canvas untuk 3D Cubes -->
+<body class="bg-black text-white relative transition-colors duration-300 dark:bg-black font-inter min-h-screen" id="theme-body">
   <canvas id="cell-canvas" class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true"></canvas>
 
-  <!-- Header -->
   <%- include('partials/header') %>
 
-  <!-- Searcher Section -->
-  <section class="pt-24 pb-16 flex items-center justify-center text-center px-4">
+  <section class="pt-24 pb-16 flex items-center justify-center text-center px-4 relative z-10">
     <div class="container mx-auto">
       <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 animate__title">Searcher <span class="text-yellow-400">Tool</span></h2>
       <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 animate__description">
-        Cari informasi di TikTok, YouTube, atau Spotify dengan sistem pencarian cerdas kami.
+        Cari informasi di TikTok, LK21, Pinterest, atau Google Image dengan sistem pencarian cerdas kami.
       </p>
       <div class="max-w-lg mx-auto bg-cyan-900/10 backdrop-blur-md p-6 rounded-2xl shadow-lg border-2 border-yellow-500">
         <form id="search-form" action="/search" method="GET" class="flex flex-col gap-6">
-          <!-- Platform Selection -->
           <div class="bg-cyan-900/20 backdrop-blur-md p-4 rounded-xl border border-yellow-400">
             <p class="text-yellow-300 font-semibold mb-4">Pilih Salah Satu</p>
-            <div class="flex justify-center gap-6">
-              <div class="custom-radio">
+            <div class="flex justify-center gap-4 flex-wrap">
+              <div class="custom-radio text-center">
                 <input type="radio" id="tiktok" name="platform" value="tiktok" class="hidden" required>
                 <label for="tiktok" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-gray-600 text-gray-600 hover:bg-gray-500/20 hover:text-gray-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-gray-900 data-[checked=true]:border-gray-200 data-[checked=true]:text-gray-200">
                   <i class="fab fa-tiktok text-2xl"></i>
                 </label>
+                <p class="text-gray-300 text-sm mt-2">TikTok</p>
               </div>
-              <div class="custom-radio">
-                <input type="radio" id="youtube" name="platform" value="youtube" class="hidden">
-                <label for="youtube" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-red-600 text-red-600 hover:bg-red-500/20 hover:text-red-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-red-900/30 data-[checked=true]:border-red-200 data-[checked=true]:text-red-200">
-                  <i class="fab fa-youtube text-2xl"></i>
+              <div class="custom-radio text-center">
+                <input type="radio" id="lk21" name="platform" value="lk21" class="hidden">
+                <label for="lk21" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-blue-600 text-blue-600 hover:bg-blue-500/20 hover:text-blue-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-blue-900/30 data-[checked=true]:border-blue-200 data-[checked=true]:text-blue-200">
+                  <i class="fas fa-film text-2xl"></i>
                 </label>
+                <p class="text-gray-300 text-sm mt-2">LK21</p>
               </div>
-              <div class="custom-radio">
-                <input type="radio" id="spotify" name="platform" value="spotify" class="hidden">
-                <label for="spotify" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-green-600 text-green-600 hover:bg-green-500/20 hover:text-green-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-green-900/30 data-[checked=true]:border-green-200 data-[checked=true]:text-green-200">
-                  <i class="fab fa-spotify text-2xl"></i>
+              <div class="custom-radio text-center">
+                <input type="radio" id="pinterest" name="platform" value="pinterest" class="hidden">
+                <label for="pinterest" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-red-600 text-red-600 hover:bg-red-500/20 hover:text-red-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-red-900/30 data-[checked=true]:border-red-200 data-[checked=true]:text-red-200">
+                  <i class="fab fa-pinterest text-2xl"></i>
                 </label>
+                <p class="text-gray-300 text-sm mt-2">Pinterest</p>
+              </div>
+              <div class="custom-radio text-center">
+                <input type="radio" id="gimage" name="platform" value="gimage" class="hidden">
+                <label for="gimage" class="flex items-center justify-center w-14 h-14 rounded-full border-2 border-green-600 text-green-600 hover:bg-green-500/20 hover:text-green-200 transition-all duration-300 cursor-pointer data-[checked=true]:bg-green-900/30 data-[checked=true]:border-green-200 data-[checked=true]:text-green-200">
+                  <i class="fab fa-google text-2xl"></i>
+                </label>
+                <p class="text-gray-300 text-sm mt-2">Google</p>
               </div>
             </div>
           </div>
-          <!-- Search Input -->
-          <input type="text" name="query" placeholder="Masukkan kata kunci pencarian" class="bg-transparent border border-yellow-400 rounded px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+          <input type="text" name="question" placeholder="Masukkan kata kunci pencarian" class="bg-transparent border border-yellow-400 rounded px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
           <button type="submit" id="search-button" class="px-6 py-3 border border-yellow-500 text-yellow-400 rounded-full hover:bg-yellow-500/20 hover:text-yellow-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
             Cari Sekarang
           </button>
         </form>
       </div>
+
+      <% if (error) { %>
+        <div class="mt-8 text-red-400 text-center">
+          <p><%= error %></p>
+        </div>
+      <% } %>
+
+      <% if (searchResults && searchResults.length > 0) { %>
+        <div id="results-container" class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+          <% searchResults.forEach((result, index) => { %>
+            <div id="card-<%= index %>" class="bg-cyan-900/20 backdrop-blur-md p-4 rounded-xl border border-yellow-400">
+              <a href="<%= result.url %>" target="_blank">
+                <img src="<%= result.thumbnail %>" alt="<%= result.title %>" class="w-full h-48 object-cover rounded-lg mb-4">
+              </a>
+              <h3 class="text-lg font-semibold text-yellow-300 truncate"><%= result.title %></h3>
+              <p class="text-gray-300 text-sm">By <%= result.author %> (<%= result.username %>)</p>
+              <p class="text-gray-400 text-sm">Posted: <%= result.created_at %></p>
+              <% if (platform === 'tiktok') { %>
+                <p class="text-gray-300 text-sm mt-2">Plays: <%= result.stats.play %> | Likes: <%= result.stats.like %> | Comments: <%= result.stats.comment %></p>
+              <% } else if (platform === 'lk21') { %>
+                <p class="text-gray-300 text-sm mt-2">Rating: <%= result.stats.rating %></p>
+              <% } else if (platform === 'pinterest' || platform === 'gimage') { %>
+                <p class="text-gray-300 text-sm mt-2">Likes: <%= result.stats.likes %></p>
+              <% } %>
+              <div class="flex gap-2 mt-4 flex-col sm:flex-row">
+                <button onclick="startDownload('<%= result.download_url %>', '<%= result.title %>')" class="flex-1 px-4 py-2 border border-yellow-500 text-yellow-400 rounded-full hover:bg-yellow-500/20 hover:text-yellow-200 transition-colors text-center text-sm sm:text-base">View</button>
+                <button onclick="deleteCard('<%= index %>')" class="flex-1 px-4 py-2 border border-red-500 text-red-400 rounded-full hover:bg-red-500/20 hover:text-red-200 transition-colors text-center text-sm sm:text-base">Hapus</button>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
     </div>
   </section>
 
-  <!-- Footer -->
   <%- include('partials/footer') %>
 
-  <!-- JavaScript -->
   <%- include('utils/js/script') %>
   <script>
-    // Enable/disable search button and toggle checked state
     const searchForm = document.getElementById('search-form');
     const searchButton = document.getElementById('search-button');
     const platformInputs = document.querySelectorAll('input[name="platform"]');
 
     platformInputs.forEach(input => {
       input.addEventListener('change', () => {
-        // Enable button if a platform is selected
         searchButton.disabled = !searchForm.querySelector('input[name="platform"]:checked');
-        // Toggle data-checked attribute for styling
         platformInputs.forEach(i => {
           const label = i.nextElementSibling;
           label.dataset.checked = i.checked ? 'true' : 'false';
         });
       });
     });
+
+    function startDownload(url, title) {
+      // Create a temporary anchor element to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      // Set a default filename using the title, sanitized to remove invalid characters
+      const sanitizedTitle = title.replace(/[^a-zA-Z0-9-_]/g, '_').toLowerCase();
+      link.download = `${sanitizedTitle}`; // Suggest a filename for the download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link); // Clean up
+    }
+
+    function deleteCard(index) {
+      const card = document.getElementById(`card-${index}`);
+      anime({
+        targets: card,
+        opacity: [1, 0],
+        scale: [1, 0.9],
+        easing: 'easeInQuad',
+        duration: 300,
+        complete: () => {
+          card.remove();
+          // Optional: Check if all cards are deleted and show a message
+          const remainingCards = document.querySelectorAll('#results-container > div');
+          if (remainingCards.length === 0) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '<p class="text-gray-400 text-center">Tidak ada hasil yang tersisa.</p>';
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>
